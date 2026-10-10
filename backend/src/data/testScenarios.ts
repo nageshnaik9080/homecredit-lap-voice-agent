@@ -1,0 +1,211 @@
+// ─────────────────────────────────────────────────────────────
+// Pre-defined test scenarios for the demo interface and tests
+// ─────────────────────────────────────────────────────────────
+
+export interface TestScenario {
+  id: string;
+  name: string;
+  description: string;
+  customerName: string;
+  utterances: string[];
+  expectedOutcome: string;
+  expectedCallOutcome: string;
+}
+
+export const TEST_SCENARIOS: TestScenario[] = [
+  {
+    id: 'fully_eligible',
+    name: '1 — Fully Eligible Customer',
+    description: 'All 7 eligibility items pass. Customer should be handed off.',
+    customerName: 'Rahul Sharma',
+    utterances: [
+      'Yes, this is Rahul.',
+      "Sure, that sounds interesting.",
+      "It's a residential property.",
+      "I'm the sole owner.",
+      "Yes, I have the original documents at home.",
+      "I'm looking for around 50 lakhs.",
+      "I'm salaried and my salary comes directly to my bank account.",
+      "The property is worth about 1 crore.",
+      "I'd like to repay over 10 years.",
+    ],
+    expectedOutcome: 'eligible',
+    expectedCallOutcome: 'eligible',
+  },
+  {
+    id: 'agricultural_property',
+    name: '2 — Agricultural Property (Disqualify)',
+    description: 'Customer has agricultural land — immediate disqualification.',
+    customerName: 'Suresh Patel',
+    utterances: [
+      'Yes, speaking.',
+      "Yeah, go ahead.",
+      "It's agricultural land.",
+    ],
+    expectedOutcome: 'disqualified',
+    expectedCallOutcome: 'disqualified',
+  },
+  {
+    id: 'cash_income',
+    name: '3 — Cash Income (Disqualify)',
+    description: 'Customer receives income in cash — disqualify.',
+    customerName: 'Meena Reddy',
+    utterances: [
+      'Yes, this is Meena.',
+      "Okay, proceed.",
+      "Residential house.",
+      "Sole owner.",
+      "Yes, originals are available.",
+      "Around 40 lakhs.",
+      "I'm self-employed and I receive income in cash.",
+    ],
+    expectedOutcome: 'disqualified',
+    expectedCallOutcome: 'disqualified',
+  },
+  {
+    id: 'missing_originals',
+    name: '4 — Missing Original Documents (Disqualify)',
+    description: 'Customer only has photocopies.',
+    customerName: 'Anita Joshi',
+    utterances: [
+      'Yes, Anita here.',
+      "Sure.",
+      "It's a flat — residential.",
+      "I'm the sole owner.",
+      "I only have photocopies, the originals are lost.",
+    ],
+    expectedOutcome: 'disqualified',
+    expectedCallOutcome: 'disqualified',
+  },
+  {
+    id: 'tenure_too_short',
+    name: '5 — Tenure Too Short (Disqualify)',
+    description: 'Customer wants to repay in 2 years.',
+    customerName: 'Kiran Nair',
+    utterances: [
+      'Yes, this is Kiran.',
+      "Tell me more.",
+      "It's a commercial office space.",
+      "Sole owner.",
+      "Yes, I have the originals.",
+      "I need 30 lakhs.",
+      "I'm salaried, salary to bank.",
+      "Property is worth 60 lakhs.",
+      "I want to repay in 2 years.",
+    ],
+    expectedOutcome: 'disqualified',
+    expectedCallOutcome: 'disqualified',
+  },
+  {
+    id: 'tenure_too_long',
+    name: '6 — Tenure Too Long (Disqualify)',
+    description: 'Customer wants 20 years.',
+    customerName: 'Deepa Singh',
+    utterances: [
+      'Yes, Deepa here.',
+      "Sounds good.",
+      "Residential apartment.",
+      "Jointly owned with my husband.",
+      "Originals are available at home.",
+      "50 lakhs please.",
+      "I run a small business, income comes to bank.",
+      "Property worth around 1.5 crore.",
+      "I want 20 years to repay.",
+    ],
+    expectedOutcome: 'disqualified',
+    expectedCallOutcome: 'disqualified',
+  },
+  {
+    id: 'loan_amount_90l_accept',
+    name: '7 — Loan ₹90L → Accept ₹75L Cap',
+    description: 'Customer requests ₹90L, then agrees to ₹75L limit.',
+    customerName: 'Vijay Kumar',
+    utterances: [
+      'Yes, speaking.',
+      "Okay.",
+      "Residential property.",
+      "Sole owner.",
+      "Yes, originals available.",
+      "I need 90 lakhs.",
+      "Yes, okay, I'll go with 75 lakhs.",
+      "I'm salaried, income to bank.",
+      "Property market value is around 2 crore.",
+      "10 years.",
+    ],
+    expectedOutcome: 'eligible',
+    expectedCallOutcome: 'eligible',
+  },
+  {
+    id: 'joint_ownership',
+    name: '8 — Joint Ownership (Eligible)',
+    description: 'Joint ownership should not disqualify.',
+    customerName: 'Priya Mehta',
+    utterances: [
+      'Yes, this is Priya.',
+      "Sure, let's proceed.",
+      "Residential flat.",
+      "It's jointly owned with my brother.",
+      "Yes, I have the original documents.",
+      "Around 40 lakhs.",
+      "Salaried employee, salary to bank account.",
+      "Property value is approximately 80 lakhs.",
+      "I'd like 8 years.",
+    ],
+    expectedOutcome: 'eligible',
+    expectedCallOutcome: 'eligible',
+  },
+  {
+    id: 'existing_loan',
+    name: '9 — Existing Loan on Property (Transfer)',
+    description: 'Customer already has a loan on the property.',
+    customerName: 'Arun Pillai',
+    utterances: [
+      'Yes, this is Arun.',
+      "Actually, I already have a loan on this property.",
+    ],
+    expectedOutcome: 'transfer_required',
+    expectedCallOutcome: 'transfer_required',
+  },
+  {
+    id: 'emi_reduction',
+    name: '10 — EMI Reduction Request (Transfer)',
+    description: 'Customer wants to reduce current EMI.',
+    customerName: 'Sunita Verma',
+    utterances: [
+      'Yes, Sunita here.',
+      "I'm actually more interested in reducing my current EMI.",
+    ],
+    expectedOutcome: 'transfer_required',
+    expectedCallOutcome: 'transfer_required',
+  },
+  {
+    id: 'out_of_order',
+    name: '11 — Out-of-Order Answers',
+    description:
+      'Customer provides multiple facts at once; agent must not repeat questions.',
+    customerName: 'Rohit Bansal',
+    utterances: [
+      'Yes, speaking.',
+      "Sure.",
+      "It's a residential house, jointly owned with my wife, and worth about 80 lakhs.",
+      "Yes, originals are at home.",
+      "I need 45 lakhs.",
+      "I'm self-employed, income credited to bank.",
+      "12 years.",
+    ],
+    expectedOutcome: 'eligible',
+    expectedCallOutcome: 'eligible',
+  },
+  {
+    id: 'busy_customer',
+    name: '12 — Busy Customer (Callback)',
+    description: 'Customer is busy and requests a callback.',
+    customerName: 'Neha Gupta',
+    utterances: [
+      "I'm actually busy right now.",
+      "Tomorrow morning at 10 am would be good.",
+    ],
+    expectedOutcome: 'callback_requested',
+    expectedCallOutcome: 'callback_requested',
+  },
+];

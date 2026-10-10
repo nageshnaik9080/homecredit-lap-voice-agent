@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.env
+*.log
+coverage/
+.DS_Store
+Thumbs.db
+backend/node_modules/
+frontend/node_modules/
+backend/dist/
+frontend/dist/
