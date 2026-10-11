@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: homecredit-lap-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 4000
+      - key: MOCK_MODE
+        value: true
+      - key: NODE_ENV
+        value: production
+      - key: COMPANY_NAME
+        value: Home Credit
+      - key: AGENT_NAME
+        value: Priya
+      - key: AGENT_GENDER
+        value: female
+      - key: LANGUAGE_TO_SPEAK
+        value: English
